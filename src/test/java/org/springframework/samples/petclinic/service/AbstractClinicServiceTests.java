@@ -187,6 +187,8 @@ abstract class AbstractClinicServiceTests {
         int found = owner6.getPets().size();
 
         Pet pet = new Pet();
+        // the creation form posts an empty hidden "id" field
+        pet.setId("");
         pet.setName("bowser");
         pet.setType(findPetType("dog"));
         pet.setBirthDate(LocalDate.now());

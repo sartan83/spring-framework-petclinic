@@ -35,8 +35,12 @@ public class BaseEntity {
         return id;
     }
 
+    /**
+     * Blank values (e.g. the empty hidden {@code id} field of a creation form) are stored as {@code null},
+     * so that the entity is considered new and gets a generated ObjectId.
+     */
     public void setId(String id) {
-        this.id = id;
+        this.id = (id == null || id.isBlank()) ? null : id;
     }
 
     public boolean isNew() {
