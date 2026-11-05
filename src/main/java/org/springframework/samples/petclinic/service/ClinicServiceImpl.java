@@ -59,19 +59,24 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     @Transactional(readOnly = true)
-    public Owner findOwnerById(int id) {
-        return ownerRepository.findById(id);
+    public Owner findOwnerById(String id) {
+        return ownerRepository.findById(id).orElse(null);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Collection<Owner> findOwnerByLastName(String lastName) {
-        return ownerRepository.findByLastName(lastName);
+        return ownerRepository.findByLastNameStartingWithIgnoreCase(lastName);
     }
 
     @Override
     @Transactional
     public void saveOwner(Owner owner) {
+        if (!owner.isNew() && owner.getPetsInternal().isEmpty()) {
+            // An owner bound from the edit form carries no pets: keep the ones embedded in the stored document.
+            ownerRepository.findById(owner.getId())
+                .ifPresent(existing -> owner.setPetsInternal(existing.getPetsInternal()));
+        }
         ownerRepository.save(owner);
     }
 
@@ -85,7 +90,7 @@ public class ClinicServiceImpl implements ClinicService {
 
     @Override
     @Transactional(readOnly = true)
-    public Pet findPetById(int id) {
+    public Pet findPetById(String id) {
         return petRepository.findById(id);
     }
 
@@ -99,13 +104,14 @@ public class ClinicServiceImpl implements ClinicService {
     @Transactional(readOnly = true)
     @Cacheable(value = "vets")
     public Collection<Vet> findVets() {
-        return vetRepository.findAll();
+        return vetRepository.findAllByOrderByLastNameAscFirstNameAsc();
     }
 
-	@Override
-	public Collection<Visit> findVisitsByPetId(int petId) {
-		return visitRepository.findByPetId(petId);
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public Collection<Visit> findVisitsByPetId(String petId) {
+        return visitRepository.findByPetId(petId);
+    }
 
 
 }

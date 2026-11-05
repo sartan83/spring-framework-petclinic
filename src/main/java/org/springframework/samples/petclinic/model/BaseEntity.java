@@ -15,28 +15,27 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import org.springframework.data.annotation.Id;
 
 /**
  * Simple JavaBean domain object with an id property. Used as a base class for objects needing this property.
+ * <p>
+ * The id is a MongoDB ObjectId rendered as a hexadecimal String. Top-level documents get it from MongoDB on insert,
+ * embedded documents (pets, visits) get it assigned by the repository layer.
  *
  * @author Ken Krebs
  * @author Juergen Hoeller
  */
-@MappedSuperclass
 public class BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
 
-    public Integer getId() {
+    @Id
+    protected String id;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

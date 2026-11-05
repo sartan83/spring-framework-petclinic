@@ -26,8 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringJUnitWebConfig(locations = {"classpath:spring/mvc-core-config.xml", "classpath:spring/mvc-test-config.xml"})
 class PetControllerTests {
 
-    private static final int TEST_OWNER_ID = 1;
-    private static final int TEST_PET_ID = 1;
+    private static final String TEST_OWNER_ID = "6560f1a2b3c4d5e6f7a8b9c0";
+    private static final String TEST_PET_ID = "6560f1a2b3c4d5e6f7a8b9c1";
 
     @Autowired
     private PetController petController;
@@ -48,7 +48,7 @@ class PetControllerTests {
             .build();
 
         PetType cat = new PetType();
-        cat.setId(3);
+        cat.setId("6560f1a2b3c4d5e6f7a8b9c3");
         cat.setName("hamster");
         given(this.clinicService.findPetTypes()).willReturn(Lists.newArrayList(cat));
         given(this.clinicService.findOwnerById(TEST_OWNER_ID)).willReturn(new Owner());

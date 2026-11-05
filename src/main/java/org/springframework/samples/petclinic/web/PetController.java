@@ -52,7 +52,7 @@ public class PetController {
     }
 
     @ModelAttribute("owner")
-    public Owner findOwner(@PathVariable("ownerId") int ownerId) {
+    public Owner findOwner(@PathVariable("ownerId") String ownerId) {
         return this.clinicService.findOwnerById(ownerId);
     }
 
@@ -90,7 +90,7 @@ public class PetController {
     }
 
     @GetMapping(value = "/pets/{petId}/edit")
-    public String initUpdateForm(@PathVariable("petId") int petId, ModelMap model) {
+    public String initUpdateForm(@PathVariable("petId") String petId, ModelMap model) {
         Pet pet = this.clinicService.findPetById(petId);
         model.put("pet", pet);
         return VIEWS_PETS_CREATE_OR_UPDATE_FORM;

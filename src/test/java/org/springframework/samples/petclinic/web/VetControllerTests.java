@@ -39,13 +39,13 @@ class VetControllerTests {
         Vet james = new Vet();
         james.setFirstName("James");
         james.setLastName("Carter");
-        james.setId(1);
+        james.setId("6560f1a2b3c4d5e6f7a8b9d1");
         Vet helen = new Vet();
         helen.setFirstName("Helen");
         helen.setLastName("Leary");
-        helen.setId(2);
+        helen.setId("6560f1a2b3c4d5e6f7a8b9d2");
         Specialty radiology = new Specialty();
-        radiology.setId(1);
+        radiology.setId("6560f1a2b3c4d5e6f7a8b9e1");
         radiology.setName("radiology");
         helen.addSpecialty(radiology);
         given(this.clinicService.findVets()).willReturn(Lists.newArrayList(james, helen));
@@ -64,7 +64,7 @@ class VetControllerTests {
         ResultActions actions = mockMvc.perform(get("/vets.json").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
         actions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.vetList[0].id").value(1));
+            .andExpect(jsonPath("$.vetList[0].id").value("6560f1a2b3c4d5e6f7a8b9d1"));
     }
 
     @Test
@@ -72,7 +72,7 @@ class VetControllerTests {
         mockMvc.perform(get("/vets.xml").accept(MediaType.APPLICATION_XML))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML_VALUE))
-            .andExpect(content().node(hasXPath("/vets/vet[id=1]/id")));
+            .andExpect(content().node(hasXPath("/vets/vet[id='6560f1a2b3c4d5e6f7a8b9d1']/id")));
     }
 
 }

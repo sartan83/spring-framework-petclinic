@@ -15,27 +15,21 @@
  */
 package org.springframework.samples.petclinic.repository;
 
-import java.util.Collection;
+import java.util.List;
 
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.samples.petclinic.model.Vet;
 
 /**
- * Repository class for <code>Vet</code> domain objects All method names are compliant with Spring Data naming
- * conventions so this interface can easily be extended for Spring Data See here: http://static.springsource.org/spring-data/jpa/docs/current/reference/html/jpa.repositories.html#jpa.query-methods.query-creation
+ * Spring Data MongoDB repository for {@link Vet} documents. Specialties are embedded in the vet document.
  *
  * @author Ken Krebs
  * @author Juergen Hoeller
  * @author Sam Brannen
  * @author Michael Isvy
  */
-public interface VetRepository {
+public interface VetRepository extends MongoRepository<Vet, String> {
 
-    /**
-     * Retrieve all <code>Vet</code>s from the data store.
-     *
-     * @return a <code>Collection</code> of <code>Vet</code>s
-     */
-    Collection<Vet> findAll();
-
+    List<Vet> findAllByOrderByLastNameAscFirstNameAsc();
 
 }

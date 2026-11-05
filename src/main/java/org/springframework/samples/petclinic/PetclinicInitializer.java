@@ -38,24 +38,10 @@ import jakarta.servlet.ServletContext;
  */
 public class PetclinicInitializer extends AbstractDispatcherServletInitializer {
 
-    /**
-     * Spring profile used to choose the persistence layer implementation.
-     * <p>
-     * When using Spring jpa, use: jpa
-     * When using Spring JDBC, use: jdbc
-     * When using Spring Data JPA, use: spring-data-jpa
-     * <p/>
-     * <p>
-     * You also may use the -Dspring.profiles.active=jdbc VM options to change
-     * default jpa Spring profile.
-     */
-    private static final String SPRING_PROFILE = "jpa";
-
     @Override
     protected WebApplicationContext createRootApplicationContext() {
         XmlWebApplicationContext rootAppContext = new XmlWebApplicationContext();
         rootAppContext.setConfigLocations("classpath:spring/business-config.xml", "classpath:spring/tools-config.xml");
-        rootAppContext.getEnvironment().setDefaultProfiles(SPRING_PROFILE);
         return rootAppContext;
     }
 
