@@ -15,15 +15,13 @@
  */
 package org.springframework.samples.petclinic.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Juergen Hoeller
  *         Can be Cat, Dog, Hamster...
  */
-@Entity
-@Table(name = "types")
+@Document(collection = "types")
 public class PetType extends NamedEntity {
 
 }

@@ -33,9 +33,9 @@ public interface ClinicService {
 
     Collection<PetType> findPetTypes();
 
-    Owner findOwnerById(int id);
+    Owner findOwnerById(String id);
 
-    Pet findPetById(int id);
+    Pet findPetById(String id);
 
     void savePet(Pet pet);
 
@@ -47,6 +47,6 @@ public interface ClinicService {
 
     Collection<Owner> findOwnerByLastName(String lastName);
 
-	Collection<Visit> findVisitsByPetId(int petId);
+	Collection<Visit> findVisitsByPetId(String petId);
 
 }

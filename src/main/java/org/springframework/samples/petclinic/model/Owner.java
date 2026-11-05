@@ -22,15 +22,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
 
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Simple JavaBean domain object representing an owner.
@@ -40,23 +36,18 @@ import org.springframework.core.style.ToStringCreator;
  * @author Sam Brannen
  * @author Michael Isvy
  */
-@Entity
-@Table(name = "owners")
+@Document(collection = "owners")
 public class Owner extends Person {
-    @Column(name = "address")
     @NotEmpty
     private String address;
 
-    @Column(name = "city")
     @NotEmpty
     private String city;
 
-    @Column(name = "telephone")
     @NotEmpty
     @Digits(fraction = 0, integer = 10)
     private String telephone;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
     private Set<Pet> pets;
 
 
@@ -84,14 +75,15 @@ public class Owner extends Person {
         this.telephone = telephone;
     }
 
-    protected Set<Pet> getPetsInternal() {
+    public Set<Pet> getPetsInternal() {
         if (this.pets == null) {
             this.pets = new HashSet<>();
         }
+        this.pets.forEach(pet -> pet.setOwner(this));
         return this.pets;
     }
 
-    protected void setPetsInternal(Set<Pet> pets) {
+    public void setPetsInternal(Set<Pet> pets) {
         this.pets = pets;
     }
 

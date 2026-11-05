@@ -17,11 +17,9 @@ package org.springframework.samples.petclinic.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
@@ -30,14 +28,12 @@ import java.time.LocalDate;
  *
  * @author Ken Krebs
  */
-@Entity
-@Table(name = "visits")
 public class Visit extends BaseEntity {
 
     /**
      * Holds value of property date.
      */
-    @Column(name = "visit_date")
+    @Field("visitDate")
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate date;
 
@@ -45,14 +41,12 @@ public class Visit extends BaseEntity {
      * Holds value of property description.
      */
     @NotEmpty
-    @Column(name = "description")
     private String description;
 
     /**
      * Holds value of property pet.
      */
-    @ManyToOne
-    @JoinColumn(name = "pet_id")
+    @Transient
     private Pet pet;
 
 

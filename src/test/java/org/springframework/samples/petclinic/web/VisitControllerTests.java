@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringJUnitWebConfig(locations = {"classpath:spring/mvc-test-config.xml", "classpath:spring/mvc-core-config.xml" })
 class VisitControllerTests {
 
-    private static final int TEST_PET_ID = 1;
+    private static final String TEST_PET_ID = "6560f1a2b3c4d5e6f7a8b9c1";
 
     @Autowired
     private VisitController visitController;

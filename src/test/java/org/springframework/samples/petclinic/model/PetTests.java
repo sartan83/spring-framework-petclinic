@@ -68,7 +68,7 @@ class PetTests {
 
     @Test
     void addVisit_shouldSetPetIdOnVisit() {
-        pet.setId(5);
+        pet.setId("6560f1a2b3c4d5e6f7a8b9c5");
         Visit visit = new Visit();
         visit.setDate(LocalDate.now());
         visit.setDescription("Test visit");
@@ -76,5 +76,15 @@ class PetTests {
         pet.addVisit(visit);
 
         assertEquals(pet.getId(), visit.getPet().getId());
+    }
+
+    @Test
+    void setId_shouldTreatBlankIdAsNew() {
+        pet.setId("");
+        assertNull(pet.getId());
+        assertTrue(pet.isNew());
+
+        pet.setId("6560f1a2b3c4d5e6f7a8b9c1");
+        assertFalse(pet.isNew());
     }
 }

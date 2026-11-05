@@ -1,0 +1,65 @@
+# PetClinic on MongoDB 8 (single-node replica set, required for multi-document transactions).
+#
+#   docker compose up --build        -> http://localhost:8080
+#   docker compose down -v           -> stop and delete the data volume
+services:
+  mongo:
+    image: ${MONGO_IMAGE:-mongo:8.0}
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      # Healthy as soon as mongod answers; the replica set is initiated by mongo-init.
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+
+  # One-shot job: initiates the rs0 replica set (idempotent) and seeds the petclinic database.
+  mongo-init:
+    image: ${MONGO_IMAGE:-mongo:8.0}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    volumes:
+      - ./src/main/resources/mongo/init-data.js:/scripts/init-data.js:ro
+    entrypoint:
+      - bash
+      - -c
+      - |
+        set -e
+        mongosh --quiet --host mongo --eval "
+          try { rs.status(); print('Replica set rs0 already initiated'); }
+          catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'mongo:27017' }] }); print('Replica set rs0 initiated'); }
+          while (!db.hello().isWritablePrimary) { sleep(500); }
+        "
+        mongosh --quiet "mongodb://mongo:27017/petclinic?replicaSet=rs0" /scripts/init-data.js
+    restart: "no"
+
+  petclinic:
+    build:
+      context: .
+      args:
+        MAVEN_MIRROR_URL: ${MAVEN_MIRROR_URL:-}
+    image: spring-framework-petclinic:latest
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/petclinic?replicaSet=rs0
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      mongo-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "-o", "/dev/null", "http://localhost:8080/"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+volumes:
+  mongo-data:
