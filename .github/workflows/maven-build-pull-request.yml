@@ -7,8 +7,7 @@ on:
 jobs:
   build:
 
-    # mongo:8.0 (Testcontainers) refuses to start on Linux kernel >= 6.19 (ubuntu-26.04 runners), see SERVER-121912
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         java: [ '21' ]
@@ -24,4 +23,4 @@ jobs:
     - name: Build
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: ./mvnw -B verify
+      run: ./mvnw -B verify -Dmongodb.image=mongo:8.2

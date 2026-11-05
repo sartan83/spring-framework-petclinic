@@ -35,7 +35,7 @@ Compose starts three services:
 | `mongo-init` | one-shot job: `rs.initiate()` for `rs0`, waits for the primary, then runs [init-data.js](src/main/resources/mongo/init-data.js) (skipped when data already exists) |
 | `petclinic`  | the WAR built with Maven/JDK 21 and deployed as `ROOT.war` on Jetty 12 (`jetty:12-jdk21`), with `MONGODB_URI=mongodb://mongo:27017/petclinic?replicaSet=rs0` |
 
-> MongoDB 8.0 refuses to start on Linux kernel 6.19 or newer (`MongoDB cannot start: Linux kernel versions 6.19 and newer has a known incompatibility`, see [SERVER-121912](https://jira.mongodb.org/browse/SERVER-121912)). Run Docker on an older kernel (e.g. Ubuntu 24.04) until a fixed MongoDB release is available.
+> MongoDB 8.0 refuses to start on Linux kernel 6.19 or newer (`MongoDB cannot start: Linux kernel versions 6.19 and newer has a known incompatibility`, see [SERVER-121912](https://jira.mongodb.org/browse/SERVER-121912)). On such hosts use MongoDB 8.2, which is not affected: `MONGO_IMAGE=mongo:8.2 docker compose up -d --build` and `./mvnw verify -Dmongodb.image=mongo:8.2` (the GitHub Actions build does the latter).
 
 Use `docker compose down -v` to stop everything and delete the data volume (the seed runs again at the next start).
 Behind a corporate proxy of Maven Central, pass it to the build: `MAVEN_MIRROR_URL=https://nexus.example.com/repository/maven-public/ docker compose up --build`.

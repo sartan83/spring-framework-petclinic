@@ -4,7 +4,7 @@
 #   docker compose down -v           -> stop and delete the data volume
 services:
   mongo:
-    image: mongo:8.0
+    image: ${MONGO_IMAGE:-mongo:8.0}
     command: ["--replSet", "rs0", "--bind_ip_all"]
     ports:
       - "27017:27017"
@@ -20,7 +20,7 @@ services:
 
   # One-shot job: initiates the rs0 replica set (idempotent) and seeds the petclinic database.
   mongo-init:
-    image: mongo:8.0
+    image: ${MONGO_IMAGE:-mongo:8.0}
     depends_on:
       mongo:
         condition: service_healthy
